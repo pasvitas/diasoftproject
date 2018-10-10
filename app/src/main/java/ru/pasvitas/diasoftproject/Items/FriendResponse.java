@@ -11,5 +11,5 @@ public class FriendResponse {
     public Integer count;
     @Expose
     @SerializedName("items")
-    public Integer[] friendsId;
+    public Friend[] friends;
 }

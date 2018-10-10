@@ -12,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class VkApi {
-    private static final String apiFriends = "https://api.vk.com/method/friends.get?v=5.85&access_token=%s";
+    private static final String apiFriends = "https://api.vk.com/method/friends.get?v=5.85&fields=1&access_token=%s";
     private static final String apiUsers = "https://api.vk.com/method/users.get?v=5.85&user_ids=%d&access_token=%s";
 
     public String getFriends()  {

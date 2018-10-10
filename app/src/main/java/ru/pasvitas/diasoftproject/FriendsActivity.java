@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Items.FriendResponse;
@@ -98,13 +99,15 @@ public class FriendsActivity extends ListActivity {
 
         ArrayList<String> arrayList = new ArrayList<>();
 
-        for(Integer friendId : response.friendResponse.friendsId)
+        for(Friend friend : response.friendResponse.friends)
         {
-            arrayList.add(friendId.toString());
+            arrayList.add(friend.toString());
             //String friendInfo = vkApi.getUser(friendId);
             //Friend friend = gson.fromJson(friendInfo, Friend.class);
             //arrayList.add(friend.getFirst_name() + " " + friend.getSecond_name());
         }
+
+        Collections.sort(arrayList);
 
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
 
