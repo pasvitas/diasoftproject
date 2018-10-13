@@ -2,7 +2,6 @@ package ru.pasvitas.diasoftproject.Utils;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -11,7 +10,8 @@ import android.webkit.WebViewClient;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
-import java.util.List;
+
+import ru.pasvitas.diasoftproject.Listeners.IFinisherListener;
 
 public class UtilWebClient extends WebViewClient {
 

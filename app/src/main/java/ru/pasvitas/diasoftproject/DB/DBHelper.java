@@ -6,17 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import ru.pasvitas.diasoftproject.Items.Friend;
-import ru.pasvitas.diasoftproject.Items.Response;
-import ru.pasvitas.diasoftproject.Utils.PhotoDownloader;
 import ru.pasvitas.diasoftproject.Utils.VkApi;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -57,7 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     cv.put(KEY_LNAME,    friend.getLast_name());
 
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    PhotoDownloader.DownloadPhoto(friend.getPhoto_50()).compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    VkApi.DownloadPhoto(friend.getPhoto_50()).compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
                     cv.put(KEY_AVATAR,  stream.toByteArray());
 

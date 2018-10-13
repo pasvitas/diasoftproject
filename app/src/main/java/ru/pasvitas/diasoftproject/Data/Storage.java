@@ -1,4 +1,4 @@
-package ru.pasvitas.diasoftproject.Utils;
+package ru.pasvitas.diasoftproject.Data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -10,10 +10,11 @@ import java.io.ByteArrayOutputStream;
 
 import ru.pasvitas.diasoftproject.DB.DBHelper;
 import ru.pasvitas.diasoftproject.Items.Friend;
+import ru.pasvitas.diasoftproject.Utils.VkApi;
 
 public class Storage {
 
-    DBHelper dbHelper;
+    private DBHelper dbHelper;
 
     public Storage(DBHelper dbHelper) {
         this.dbHelper = dbHelper;
@@ -32,9 +33,10 @@ public class Storage {
             int emailIndex = cursor.getColumnIndex(DBHelper.KEY_SNAME);*/
 
             byte[] photo  = cursor.getBlob(cursor.getColumnIndex(DBHelper.KEY_AVATAR));
-            do {
-                return BitmapFactory.decodeByteArray(photo, 0, photo.length);
-            } while (cursor.moveToNext());
+            cursor.close();
+            return BitmapFactory.decodeByteArray(photo, 0, photo.length);
+
+
         } else
         {
             final ContentValues cv = new  ContentValues();
@@ -49,7 +51,7 @@ public class Storage {
                 @Override
                 public void run() {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    photo[0] = PhotoDownloader.DownloadPhoto(friend.getPhoto_50());
+                    photo[0] = VkApi.DownloadPhoto(friend.getPhoto_50());
                     photo[0].compress(Bitmap.CompressFormat.JPEG, 100, stream);
                     cv.put(DBHelper.KEY_AVATAR,  stream.toByteArray());
 

@@ -1,11 +1,10 @@
 package ru.pasvitas.diasoftproject.Utils;
 
-import android.os.Handler;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +13,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
+import ru.pasvitas.diasoftproject.Data.UserInfo;
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Items.Response;
 
@@ -28,20 +27,20 @@ public class VkApi {
 
 
 
-                URL url = null;
+                URL url;
                 try {
                     url = new URL(String.format(apiFriends, UserInfo.token));
 
                     HttpURLConnection connection =
                             (HttpURLConnection) url.openConnection();
 
-                    StringBuffer json = new StringBuffer(1024);
+                    StringBuilder json = new StringBuilder(1024);
 
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(connection.getInputStream()));
 
 
-                    String tmp = "";
+                    String tmp;
                     while ((tmp = reader.readLine()) != null)
                         json.append(tmp).append("\n");
                     reader.close();
@@ -83,7 +82,7 @@ public class VkApi {
                         new InputStreamReader(connection.getInputStream()));
 
 
-                String tmp="";
+                String tmp;
                 while((tmp=reader.readLine())!=null)
                     json.append(tmp).append("\n");
                 reader.close();
@@ -98,5 +97,22 @@ public class VkApi {
             }}).start();
 
         return json.toString();
+    }
+
+    public static Bitmap DownloadPhoto(String stringUrl)
+    {
+        try {
+            java.net.URL url = new java.net.URL(stringUrl);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

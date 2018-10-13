@@ -1,13 +1,12 @@
-package ru.pasvitas.diasoftproject.Utils;
+package ru.pasvitas.diasoftproject.Data;
 
 import android.os.Handler;
 
 public class UserInfo {
 
     public static String token;
-    public static Integer expires;
-    public static Integer userId;
-    public static Handler mainHandler;
+    private static Integer expires;
+    private static Integer userId;
 
     public static void getInfos(String response)
     {

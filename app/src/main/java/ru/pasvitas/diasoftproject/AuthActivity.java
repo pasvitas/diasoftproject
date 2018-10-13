@@ -7,8 +7,8 @@ import android.webkit.WebView;
 
 import java.net.URL;
 
-import ru.pasvitas.diasoftproject.Utils.IFinisherListener;
-import ru.pasvitas.diasoftproject.Utils.UserInfo;
+import ru.pasvitas.diasoftproject.Listeners.IFinisherListener;
+import ru.pasvitas.diasoftproject.Data.UserInfo;
 import ru.pasvitas.diasoftproject.Utils.UtilWebClient;
 
 public class AuthActivity extends AppCompatActivity {

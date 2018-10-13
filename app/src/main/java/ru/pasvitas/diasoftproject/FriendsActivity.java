@@ -1,32 +1,15 @@
 package ru.pasvitas.diasoftproject;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import ru.pasvitas.diasoftproject.DB.DBHelper;
 import ru.pasvitas.diasoftproject.Items.Friend;
-import ru.pasvitas.diasoftproject.Items.FriendResponse;
-import ru.pasvitas.diasoftproject.Items.Response;
-import ru.pasvitas.diasoftproject.Utils.FriendsListAdapter;
-import ru.pasvitas.diasoftproject.Utils.UserInfo;
+import ru.pasvitas.diasoftproject.Adapters.FriendsListAdapter;
 import ru.pasvitas.diasoftproject.Utils.VkApi;
 
 public class FriendsActivity extends ListActivity {
