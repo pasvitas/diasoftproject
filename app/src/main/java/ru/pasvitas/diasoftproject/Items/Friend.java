@@ -37,6 +37,11 @@ public class Friend {
     @SerializedName("photo_50")
     String photo_50;
 
+    @Expose
+    @SerializedName("status")
+    String status;
+
+
     @Override
     public String toString()
     {
@@ -63,5 +68,7 @@ public class Friend {
         return photo_50;
     }
 
-
+    public String getStatus() {
+        return status;
+    }
 }

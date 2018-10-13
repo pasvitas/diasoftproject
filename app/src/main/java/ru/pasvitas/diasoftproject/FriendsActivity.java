@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import ru.pasvitas.diasoftproject.DB.DBHelper;
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Items.FriendResponse;
 import ru.pasvitas.diasoftproject.Items.Response;
@@ -30,9 +31,11 @@ import ru.pasvitas.diasoftproject.Utils.VkApi;
 public class FriendsActivity extends ListActivity {
 
     private ArrayAdapter<String> arrayAdapter;
-    private VkApi vkApi = new VkApi();
+
 
     Handler handler;
+
+    DBHelper dbHelper;
 
     ListView lv;
 
@@ -41,6 +44,7 @@ public class FriendsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
         handler = new Handler();
+        dbHelper = new DBHelper(this);
             loadFriendsList();
 
     }
@@ -50,7 +54,7 @@ public class FriendsActivity extends ListActivity {
         new Thread() {
             public void run() {
 
-                final String json = vkApi.getFriends();
+                final String json = VkApi.getFriends();
 
                 if (json == null) {
                     handler.post(new Runnable() {
@@ -96,7 +100,7 @@ public class FriendsActivity extends ListActivity {
         String[] tmp = new String[arrayList.size()];
         tmp = arrayList.toArray(tmp); // Почему-то не сортируется. Придется юзать апи вк
 
-        FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, response.friendResponse.friends);
+        FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, response.friendResponse.friends, dbHelper);
         lv=findViewById(android.R.id.list);
         lv.setAdapter(adapter);
 

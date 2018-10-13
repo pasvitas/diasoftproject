@@ -12,13 +12,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import ru.pasvitas.diasoftproject.Items.Friend;
+
 public class VkApi {
 
-    public String token;
-    public Integer expires;
-    public Integer userId;
-
-    public String getFriends()  {
+    public static Friend[] getFriends()  {
 
         final String apiFriends = "https://api.vk.com/method/friends.get?v=5.85&order=name&fields=photo_50&access_token=%s";
 
@@ -56,7 +54,7 @@ public class VkApi {
 
     }
 
-    public String getUser(final Integer userid)  {
+    public static String getUser(final Integer userid)  {
 
         final String apiUsers = "https://api.vk.com/method/users.get?v=5.85&user_ids=%d&access_token=%s";
         final StringBuffer json = new StringBuffer(1024);
