@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,12 +15,15 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Items.FriendResponse;
 import ru.pasvitas.diasoftproject.Items.Response;
+import ru.pasvitas.diasoftproject.Utils.FriendsListAdapter;
 import ru.pasvitas.diasoftproject.Utils.UserInfo;
 import ru.pasvitas.diasoftproject.Utils.VkApi;
 
@@ -30,9 +34,12 @@ public class FriendsActivity extends ListActivity {
 
     Handler handler;
 
+    ListView lv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_friends);
         handler = new Handler();
             loadFriendsList();
 
@@ -66,26 +73,6 @@ public class FriendsActivity extends ListActivity {
 
             }
         }.start();
-
-
-
-        //String friends = vkApi.getFriends();
-
-
-
-
-        /*ArrayList<String> arrayList = new ArrayList<>();
-
-        for(Integer friendId : friendResponse[0].friendsId)
-        {
-            String friendInfo = vkApi.getUser(friendId);
-            Friend friend = gson.fromJson(friendInfo, Friend.class);
-            arrayList.add(friend.getFirst_name() + " " + friend.getSecond_name());
-        }
-
-
-
-        setListAdapter(arrayAdapter);*/
     }
 
     private void applyFrindsList(String json) {
@@ -102,15 +89,16 @@ public class FriendsActivity extends ListActivity {
         for(Friend friend : response.friendResponse.friends)
         {
             arrayList.add(friend.toString());
-            //String friendInfo = vkApi.getUser(friendId);
-            //Friend friend = gson.fromJson(friendInfo, Friend.class);
-            //arrayList.add(friend.getFirst_name() + " " + friend.getSecond_name());
         }
 
         Collections.sort(arrayList);
 
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
+        String[] tmp = new String[arrayList.size()];
+        tmp = arrayList.toArray(tmp); // Почему-то не сортируется. Придется юзать апи вк
 
-        setListAdapter(arrayAdapter);
+        FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, response.friendResponse.friends);
+        lv=findViewById(android.R.id.list);
+        lv.setAdapter(adapter);
+
     }
 }

@@ -9,70 +9,86 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class VkApi {
-    private static final String apiFriends = "https://api.vk.com/method/friends.get?v=5.85&fields=1&access_token=%s";
-    private static final String apiUsers = "https://api.vk.com/method/users.get?v=5.85&user_ids=%d&access_token=%s";
+
+    public String token;
+    public Integer expires;
+    public Integer userId;
 
     public String getFriends()  {
 
-           try
-           {
+        final String apiFriends = "https://api.vk.com/method/friends.get?v=5.85&order=name&fields=photo_50&access_token=%s";
 
-               URL url = new URL(String.format(apiFriends, UserInfo.token));
-               HttpURLConnection connection =
-                       (HttpURLConnection)url.openConnection();
 
-               //connection.addRequestProperty("x-api-key",
-               //        context.getString(R.string.open_weather_maps_app_id));
 
-               BufferedReader reader = new BufferedReader(
-                       new InputStreamReader(connection.getInputStream()));
 
-               StringBuffer json = new StringBuffer(1024);
-               String tmp="";
-               while((tmp=reader.readLine())!=null)
-                   json.append(tmp).append("\n");
-               reader.close();
-               return json.toString();
-           }
-           catch (Exception e)
-           {
-               e.printStackTrace();
-               return null;
-           }
+                URL url = null;
+                try {
+                    url = new URL(String.format(apiFriends, UserInfo.token));
+
+                    HttpURLConnection connection =
+                            (HttpURLConnection) url.openConnection();
+
+                    StringBuffer json = new StringBuffer(1024);
+
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(connection.getInputStream()));
+
+
+                    String tmp = "";
+                    while ((tmp = reader.readLine()) != null)
+                        json.append(tmp).append("\n");
+                    reader.close();
+
+                    return json.toString();
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    return null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
 
     }
 
-    public String getUser(Integer userid)  {
+    public String getUser(final Integer userid)  {
+
+        final String apiUsers = "https://api.vk.com/method/users.get?v=5.85&user_ids=%d&access_token=%s";
+        final StringBuffer json = new StringBuffer(1024);
+
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+
+                try {
+
+                URL url = new URL(String.format(apiUsers, userid, UserInfo.token));
+                HttpURLConnection connection =
+                        (HttpURLConnection)url.openConnection();
+
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
 
 
-        try
-        {
+                String tmp="";
+                while((tmp=reader.readLine())!=null)
+                    json.append(tmp).append("\n");
+                reader.close();
 
-            URL url = new URL(String.format(apiUsers, userid, UserInfo.token));
-            HttpURLConnection connection =
-                    (HttpURLConnection)url.openConnection();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            //connection.addRequestProperty("x-api-key",
-            //        context.getString(R.string.open_weather_maps_app_id));
 
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
+            }}).start();
 
-            StringBuffer json = new StringBuffer(1024);
-            String tmp="";
-            while((tmp=reader.readLine())!=null)
-                json.append(tmp).append("\n");
-            reader.close();
-            return json.toString();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-
+        return json.toString();
     }
 }
