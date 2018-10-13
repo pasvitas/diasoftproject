@@ -11,6 +11,8 @@ import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Items.Response;
@@ -19,7 +21,7 @@ import ru.pasvitas.diasoftproject.Utils.VkApi;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "friendsDB";
     public static final String TABLE = "friends";
 
@@ -35,31 +37,35 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(final SQLiteDatabase db) {
         db.execSQL("create table " + TABLE + "(" + KEY_ID
                 + " integer primary key," + KEY_VKID + " integer," + KEY_FNAME + " text," + KEY_LNAME + " text," + KEY_AVATAR + " blob, "+ KEY_STATUS + " text " + ")");
 
 
-        Friend[] friends = VkApi.getFriends();
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                 ArrayList<Friend> friends = new ArrayList<>(Arrays.asList(VkApi.getFriends()));
 
-        SQLiteDatabase database = this.getWritableDatabase();
 
-        for (Friend friend : friends)
-        {
-            ContentValues cv = new  ContentValues();
-            cv.put(KEY_VKID,    friend.getId());
-            cv.put(KEY_STATUS,    friend.getStatus());
-            cv.put(KEY_FNAME,    friend.getFirst_name());
-            cv.put(KEY_LNAME,    friend.getLast_name());
+                for (Friend friend : friends)
+                {
+                    ContentValues cv = new  ContentValues();
+                    cv.put(KEY_VKID,    friend.getId());
+                    cv.put(KEY_STATUS,    friend.getStatus());
+                    cv.put(KEY_FNAME,    friend.getFirst_name());
+                    cv.put(KEY_LNAME,    friend.getLast_name());
 
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            PhotoDownloader.DownlaodPhoto(friend.getPhoto_50()).compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    PhotoDownloader.DownloadPhoto(friend.getPhoto_50()).compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
-            cv.put(KEY_AVATAR,  stream.toByteArray());
+                    cv.put(KEY_AVATAR,  stream.toByteArray());
 
-            database.insert(DBHelper.TABLE, null, cv);
+                    db.insert(DBHelper.TABLE, null, cv);
 
-        }
+                }
+            }}).start();
+
 
     }
 

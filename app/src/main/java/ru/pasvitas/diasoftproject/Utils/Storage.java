@@ -19,9 +19,9 @@ public class Storage {
         this.dbHelper = dbHelper;
     }
 
-    public Bitmap GetImage(Friend friend)
+    public Bitmap GetImage(final Friend friend)
     {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = dbHelper.getWritableDatabase();
         Cursor cursor = database.query(DBHelper.TABLE, null, DBHelper.KEY_VKID + " = " + friend.getId(), null, null, null, null);
         if (cursor.moveToFirst()) {
             /*int idIndex = cursor.getInt(cursor.getColumnIndex(DBHelper.KEY_ID));
@@ -37,20 +37,30 @@ public class Storage {
             } while (cursor.moveToNext());
         } else
         {
-            ContentValues cv = new  ContentValues();
+            final ContentValues cv = new  ContentValues();
             cv.put(DBHelper.KEY_VKID,    friend.getId());
             cv.put(DBHelper.KEY_STATUS,    friend.getStatus());
             cv.put(DBHelper.KEY_FNAME,    friend.getFirst_name());
             cv.put(DBHelper.KEY_LNAME,    friend.getLast_name());
 
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            Bitmap photo =  PhotoDownloader.DownlaodPhoto(friend.getPhoto_50());
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+             //final
+            final Bitmap[] photo = new Bitmap[1];
+            new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    photo[0] = PhotoDownloader.DownloadPhoto(friend.getPhoto_50());
+                    photo[0].compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    cv.put(DBHelper.KEY_AVATAR,  stream.toByteArray());
 
-            cv.put(DBHelper.KEY_AVATAR,  stream.toByteArray());
+                    database.insert(DBHelper.TABLE, null, cv);
 
-            database.insert(DBHelper.TABLE, null, cv);
-            return photo;
+                }}).start();
+
+            return photo[0];
+
+
+
         }
 
     }

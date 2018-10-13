@@ -48,11 +48,7 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
 
         txtTitle.setText(friends[position].toString());
 
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
 
-                    //
 
                     final Bitmap pic = tryToGetPic(friends[position]);
 
@@ -63,7 +59,7 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
                         }
                     });
 
-                }}).start();
+
 
         return rowView;
 
