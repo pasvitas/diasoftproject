@@ -37,14 +37,20 @@ public class Storage {
             } while (cursor.moveToNext());
         } else
         {
-            ContentValues contentValues = new ContentValues();
+            ContentValues cv = new  ContentValues();
+            cv.put(DBHelper.KEY_VKID,    friend.getId());
+            cv.put(DBHelper.KEY_STATUS,    friend.getStatus());
+            cv.put(DBHelper.KEY_FNAME,    friend.getFirst_name());
+            cv.put(DBHelper.KEY_LNAME,    friend.getLast_name());
 
-            Bitmap b = PhotoDownloader.DownlaodPhoto(friend.getPhoto_50());
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            byte[] img = bos.toByteArray();
-            contentValues.put(DBHelper.KEY_AVATAR, img);
-            return b;
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            Bitmap photo =  PhotoDownloader.DownlaodPhoto(friend.getPhoto_50());
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+            cv.put(DBHelper.KEY_AVATAR,  stream.toByteArray());
+
+            database.insert(DBHelper.TABLE, null, cv);
+            return photo;
         }
 
     }

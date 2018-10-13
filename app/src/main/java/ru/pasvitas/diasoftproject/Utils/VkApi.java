@@ -2,6 +2,9 @@ package ru.pasvitas.diasoftproject.Utils;
 
 import android.os.Handler;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -11,8 +14,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import ru.pasvitas.diasoftproject.Items.Friend;
+import ru.pasvitas.diasoftproject.Items.Response;
 
 public class VkApi {
 
@@ -41,7 +46,12 @@ public class VkApi {
                         json.append(tmp).append("\n");
                     reader.close();
 
-                    return json.toString();
+                    GsonBuilder builder = new GsonBuilder();
+                    Gson gson = builder.create();
+                    Response response = gson.fromJson(json.toString(), Response.class);
+
+
+                    return response.friendResponse.friends;
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();

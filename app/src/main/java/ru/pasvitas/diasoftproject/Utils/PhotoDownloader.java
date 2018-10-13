@@ -10,7 +10,7 @@ import java.net.URL;
 
 public class PhotoDownloader {
 
-    static Bitmap DownlaodPhoto(String stringUrl)
+    public static Bitmap DownlaodPhoto(String stringUrl)
     {
         try {
             java.net.URL url = new java.net.URL(stringUrl);

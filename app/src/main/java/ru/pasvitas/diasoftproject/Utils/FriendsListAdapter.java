@@ -71,7 +71,9 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
 
     Bitmap tryToGetPic(Friend friend)
     {
+        Storage storage = new Storage(dbHelper);
 
+        return storage.GetImage(friend);
 
 
     }

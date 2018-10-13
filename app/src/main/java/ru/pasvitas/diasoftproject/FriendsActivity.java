@@ -1,5 +1,6 @@
 package ru.pasvitas.diasoftproject;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -54,9 +55,32 @@ public class FriendsActivity extends ListActivity {
         new Thread() {
             public void run() {
 
-                final String json = VkApi.getFriends();
+                final Friend[] friends = VkApi.getFriends();
 
-                if (json == null) {
+                if (friends == null) {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Ошибка!",
+                                    Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+                } else {
+
+
+                    handler.post(new Runnable() {
+                        public void run() {
+
+                            applyFrindsList(friends);
+
+                        }
+                    });
+                }
+
+
+
+/*                if (json == null) {
                     handler.post(new Runnable() {
                         public void run() {
                             Toast.makeText(getApplicationContext(),
@@ -73,34 +97,22 @@ public class FriendsActivity extends ListActivity {
 
                         }
                     });
-                }
+                }*/
 
             }
         }.start();
     }
 
-    private void applyFrindsList(String json) {
-
-        Response response;
+    private void applyFrindsList(Friend[] friends) {
 
 
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        response = gson.fromJson(json, Response.class);
 
-        ArrayList<String> arrayList = new ArrayList<>();
 
-        for(Friend friend : response.friendResponse.friends)
-        {
-            arrayList.add(friend.toString());
-        }
+        //Collections.sort(arrayList);
 
-        Collections.sort(arrayList);
+        String[] tmp = new String[friends.length];
 
-        String[] tmp = new String[arrayList.size()];
-        tmp = arrayList.toArray(tmp); // Почему-то не сортируется. Придется юзать апи вк
-
-        FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, response.friendResponse.friends, dbHelper);
+        FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, friends, dbHelper);
         lv=findViewById(android.R.id.list);
         lv.setAdapter(adapter);
 
