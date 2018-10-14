@@ -62,20 +62,43 @@ public class Storage {
 
     }
 
-    public Bitmap getPhoto(final Integer photoid, final Integer friendid)
+    public Bitmap getPhoto(final Photo photo, final Integer friendid)
     {
         final SQLiteDatabase database = dbHelper.getWritableDatabase();
-        Cursor cursor = database.query(DBHelper.TABLE_PHOTO, null, DBHelper.KEY_PHOTOID + " = " + photoid, null, null, null, null);
+        Cursor cursor = database.query(DBHelper.TABLE_PHOTO, null, DBHelper.KEY_PHOTOID + " = " + photo.getId(), null, null, null, null);
         if (cursor.moveToFirst()) {
 
-            byte[] photo  = cursor.getBlob(cursor.getColumnIndex(DBHelper.KEY_AVATAR));
+            byte[] photoBitmap  = cursor.getBlob(cursor.getColumnIndex(DBHelper.KEY_PHOTO));
             cursor.close();
-            return BitmapFactory.decodeByteArray(photo, 0, photo.length);
+            return BitmapFactory.decodeByteArray(photoBitmap, 0, photoBitmap.length);
 
 
         } else
         {
             final ContentValues cv = new  ContentValues();
+            cv.put(DBHelper.KEY_PHOTOID,    photo.getId());
+
+
+            //final
+            final Bitmap[] photoBitmap = new Bitmap[1];
+
+            final String url = photo.getPhotoURL();
+
+            new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    photoBitmap[0] = VkApi.DownloadPhoto(url);
+                    photoBitmap[0].compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    cv.put(DBHelper.KEY_PHOTO,  stream.toByteArray());
+
+                    database.insert(DBHelper.TABLE_PHOTO, null, cv);
+
+                }}).start();
+
+            return photoBitmap[0];
+
+            /*final ContentValues cv = new  ContentValues();
             final Bitmap[] returnPhoto = new Bitmap[1];
 
             new Thread(new Runnable(){
@@ -94,34 +117,26 @@ public class Storage {
 
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-                        stream = new ByteArrayOutputStream();
-                        VkApi.DownloadPhoto(photo.getPhotoURL()).compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        Bitmap photoBitmap = VkApi.DownloadPhoto(photo.getPhotoURL());
+                        photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
                         cv.put(DBHelper.KEY_PHOTO, stream.toByteArray());
                         database.insert(DBHelper.TABLE_PHOTO, null, cv);
                         if (photo.getId() == photoid) {
-                            returnPhoto[0] = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
+                            returnPhoto[0] = photoBitmap;
                             break;
                         }
+                    }
+                    else
+                    {
+                        byte[] photoArray = photoCursor.getBlob(photoCursor.getColumnIndex(DBHelper.KEY_PHOTO));
+                        photoCursor.close();
+                        returnPhoto[0] = BitmapFactory.decodeByteArray(photoArray, 0, photoArray.length);
                     }
                 }
                 }}).start();
 
-            /*final Bitmap[] photo = new Bitmap[1];
-            new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    photo[0] = VkApi.DownloadPhoto(friend.getPhoto_50());
-                    photo[0].compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    cv.put(DBHelper.KEY_AVATAR,  stream.toByteArray());
-
-                    database.insert(DBHelper.TABLE, null, cv);
-
-                }}).start();*/
-
-            return returnPhoto[0];
+            return returnPhoto[0];*/
 
 
 

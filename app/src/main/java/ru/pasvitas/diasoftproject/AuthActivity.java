@@ -25,7 +25,7 @@ public class AuthActivity extends AppCompatActivity {
 
         wvAuth.setWebViewClient(utilWebClient);
 
-        wvAuth.loadUrl("https://oauth.vk.com/authorize?client_id=6193788&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,photos,offline&revoke=1&response_type=token&v=5.8");
+        wvAuth.loadUrl("https://oauth.vk.com/authorize?client_id=6193788&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,photos,offline&response_type=token&v=5.8");
 
         IFinisherListener finisherListener = new IFinisherListener() {
             @Override

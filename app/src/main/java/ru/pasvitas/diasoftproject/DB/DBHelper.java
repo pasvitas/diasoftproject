@@ -16,7 +16,7 @@ import ru.pasvitas.diasoftproject.Utils.VkApi;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 11;
     public static final String DATABASE_NAME = "friendsDB";
     public static final String TABLE = "friends";
     public static final String TABLE_PHOTO = "photos";
@@ -37,10 +37,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_PHOTO + "(" + "id integer primary key," +  KEY_PHOTOID + " integer, " +  KEY_PHOTO + " blob " + ")");
+        db.execSQL("create table " + TABLE_PHOTO + "(" +  KEY_PHOTOID + " integer primary key, " +  KEY_PHOTO + " blob " + ")");
 
-        db.execSQL("create table " + TABLE + "(" + KEY_ID
-                + " integer primary key," + KEY_VKID + " integer," + KEY_FNAME + " text," + KEY_LNAME + " text," + KEY_AVATAR + " blob, "+ KEY_STATUS + " text " + ")");
+        db.execSQL("create table " + TABLE + "(" + KEY_VKID
+                + " integer primary key," + KEY_FNAME + " text," + KEY_LNAME + " text," + KEY_AVATAR + " blob, "+ KEY_STATUS + " text " + ")");
 
 
         new Thread(new Runnable(){
