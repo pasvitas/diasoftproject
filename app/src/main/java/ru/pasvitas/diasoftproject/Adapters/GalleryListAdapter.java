@@ -14,31 +14,49 @@ import java.util.Collections;
 import ru.pasvitas.diasoftproject.DB.DBHelper;
 import ru.pasvitas.diasoftproject.DB.Storage;
 import ru.pasvitas.diasoftproject.Items.Friend;
+import ru.pasvitas.diasoftproject.Items.Photo;
 import ru.pasvitas.diasoftproject.R;
 
-public class GalleryListAdapter extends ArrayAdapter<String> {
+public class GalleryListAdapter extends ArrayAdapter {
 
     private final Activity context;
     private final Integer friendid;
-    private final ArrayList<Integer> photoIds;
+    private final ArrayList<Photo> photos;
 
     private DBHelper dbHelper;
 
-    public GalleryListAdapter(Activity context, String[] tmp, ArrayList<Integer> photoIds, Integer friendid, DBHelper storage) {
+    public GalleryListAdapter(Activity context, String[] tmp, ArrayList<Photo> photos, Integer friendid, DBHelper storage) {
 
-        super(context, R.layout.gallery_list, tmp);
+        super(context, R.layout.gallery_list, photos);
 
-        this.photoIds = photoIds;
+        this.photos = photos;
         this.context=context;
         this.friendid=friendid;
         this.dbHelper = storage;
     }
 
 
-    public View getView(final int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
 
 
-        final ImageView image;
+        View row = view;
+        ImageView imageView = null;
+
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            row = inflater.inflate(R.layout.gallery_list, parent, false);
+            imageView = (ImageView) row.findViewById(R.id.image);
+            row.setTag(imageView);
+        } else {
+            imageView = (ImageView) row.getTag();
+        }
+
+        Bitmap pic = tryToGetPic(photos[position]., friendid);
+        holder.imageTitle.setText(item.getTitle());
+        holder.image.setImageBitmap(item.getImage());
+        return row;
+
+        /*final ImageView image;
 
         //need rework
 
@@ -61,7 +79,7 @@ public class GalleryListAdapter extends ArrayAdapter<String> {
                 image.setImageBitmap(pic);
             }
         });
-        return rowView;
+        return rowView;*/
 
     }
 
