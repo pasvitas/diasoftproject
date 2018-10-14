@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".FriendsActivity" />
-        <activity android:name=".GalleyActivity"></activity>
+        <activity android:name=".GalleryActivity"></activity>
     </application>
 
 </manifest>

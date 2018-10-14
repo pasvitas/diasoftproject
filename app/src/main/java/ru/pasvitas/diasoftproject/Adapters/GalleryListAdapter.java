@@ -16,18 +16,18 @@ import ru.pasvitas.diasoftproject.R;
 public class GalleryListAdapter extends ArrayAdapter<Integer> {
 
     private final Activity context;
-    private final Friend[] friends;
+    private final Friend friend;
     private final Integer[] photoIds;
 
     private DBHelper dbHelper;
 
-    public GalleryListAdapter(Activity context, Integer[] photoIds, Friend[] friends, DBHelper storage) {
+    public GalleryListAdapter(Activity context, Integer[] photoIds, Friend friend, DBHelper storage) {
 
         super(context, R.layout.gallery_list, photoIds);
 
         this.photoIds = photoIds;
         this.context=context;
-        this.friends=friends;
+        this.friend=friend;
         this.dbHelper = storage;
     }
 
@@ -48,7 +48,7 @@ public class GalleryListAdapter extends ArrayAdapter<Integer> {
             image = (ImageView) rowView.getTag();
         }
 
-        final Bitmap pic = tryToGetPic(photoIds[position], friends[position].getId());
+        final Bitmap pic = tryToGetPic(photoIds[position], friend.getId());
 
         context.runOnUiThread(new Runnable() {
             @Override

@@ -17,7 +17,7 @@ import ru.pasvitas.diasoftproject.DB.Storage;
 public class FriendsListAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
-    private final Friend[] friends;
+    final Friend[] friends;
 
     private DBHelper dbHelper;
 

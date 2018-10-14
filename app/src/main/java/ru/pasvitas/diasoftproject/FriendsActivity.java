@@ -1,9 +1,12 @@
 package ru.pasvitas.diasoftproject;
 
-import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -31,6 +34,22 @@ public class FriendsActivity extends AppCompatActivity {
         handler = new Handler();
         dbHelper = new DBHelper(this);
             loadFriendsList();
+
+            final Context context = this;
+
+        lv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                Intent intent = new Intent(context, GalleryActivity.class);
+                intent.putExtra("friendid", position);
+                startActivity(intent);
+                /*Log.d(LOG_TAG, "itemSelect: position = " + position + ", id = "
+                        + id);*/
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
     }
 
