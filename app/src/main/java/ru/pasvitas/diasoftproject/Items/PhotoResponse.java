@@ -3,21 +3,20 @@ package ru.pasvitas.diasoftproject.Items;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-
-public class FriendResponse {
+public class PhotoResponse {
     @Expose
     @SerializedName("count")
-    public Integer count;
+    Integer count;
+
     @Expose
     @SerializedName("items")
-    public Friend[] friends;
+    Photo[] photos;
 
     public Integer getCount() {
         return count;
     }
 
-    public Friend[] getFriends() {
-        return friends;
+    public Photo[] getPhotos() {
+        return photos;
     }
 }

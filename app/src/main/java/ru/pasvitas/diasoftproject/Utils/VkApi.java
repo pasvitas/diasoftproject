@@ -14,22 +14,27 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import ru.pasvitas.diasoftproject.Data.UserInfo;
 import ru.pasvitas.diasoftproject.Items.Friend;
+import ru.pasvitas.diasoftproject.Items.Photo;
 import ru.pasvitas.diasoftproject.Items.Response;
+import ru.pasvitas.diasoftproject.Items.ResponsePhoto;
 
 public class VkApi {
 
+    public static String token;
+    private static Integer expires;
+    private static Integer userId;
+
     public static Friend[] getFriends()  {
 
-        final String apiFriends = "https://api.vk.com/method/friends.get?v=5.85&order=name&fields=photo_50&access_token=%s";
+        final String apiFriends = "https://api.vk.com/method/friends.get?v=5.85&order=name&fields=photo_50,status&access_token=%s";
 
 
 
 
                 URL url;
                 try {
-                    url = new URL(String.format(apiFriends, UserInfo.token));
+                    url = new URL(String.format(apiFriends, token));
 
                     HttpURLConnection connection =
                             (HttpURLConnection) url.openConnection();
@@ -50,7 +55,7 @@ public class VkApi {
                     Response response = gson.fromJson(json.toString(), Response.class);
 
 
-                    return response.friendResponse.friends;
+                    return response.friendResponse.getFriends();
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -63,40 +68,46 @@ public class VkApi {
 
     }
 
-    public static String getUser(final Integer userid)  {
+    public static Photo[] getPhotos(Integer userId)  {
 
-        final String apiUsers = "https://api.vk.com/method/users.get?v=5.85&user_ids=%d&access_token=%s";
-        final StringBuffer json = new StringBuffer(1024);
-
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-
-                try {
-
-                URL url = new URL(String.format(apiUsers, userid, UserInfo.token));
-                HttpURLConnection connection =
-                        (HttpURLConnection)url.openConnection();
-
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(connection.getInputStream()));
+        final String apiPhotos = "https://api.vk.com/method/photos.getAll?v=5.85&owner_id=%&access_token=%s";
 
 
-                String tmp;
-                while((tmp=reader.readLine())!=null)
-                    json.append(tmp).append("\n");
-                reader.close();
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
 
-            }}).start();
+        URL url;
+        try {
+            url = new URL(String.format(apiPhotos, userId, token));
 
-        return json.toString();
+            HttpURLConnection connection =
+                    (HttpURLConnection) url.openConnection();
+
+            StringBuilder json = new StringBuilder(1024);
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+
+
+            String tmp;
+            while ((tmp = reader.readLine()) != null)
+                json.append(tmp).append("\n");
+            reader.close();
+
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            ResponsePhoto response = gson.fromJson(json.toString(), ResponsePhoto.class);
+
+
+            return response.photoResponse.getPhotos();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     public static Bitmap DownloadPhoto(String stringUrl)
@@ -114,5 +125,13 @@ public class VkApi {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void getInfos(String response)
+    {
+        String[] props = response.split("&");
+        token = props[0].split("=")[1];
+        expires = Integer.parseInt(props[1].split("=")[1]);
+        userId = Integer.parseInt(props[2].split("=")[1]);
     }
 }

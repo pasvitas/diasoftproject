@@ -8,8 +8,8 @@ import android.webkit.WebView;
 import java.net.URL;
 
 import ru.pasvitas.diasoftproject.Listeners.IFinisherListener;
-import ru.pasvitas.diasoftproject.Data.UserInfo;
 import ru.pasvitas.diasoftproject.Utils.UtilWebClient;
+import ru.pasvitas.diasoftproject.Utils.VkApi;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -47,7 +47,7 @@ public class AuthActivity extends AppCompatActivity {
             if (url.getPath().equals("/blank.html"))
             {
                 String info = url.getRef();
-                UserInfo.getInfos(info);
+                VkApi.getInfos(info);
                 Intent intent = new Intent(this, FriendsActivity.class);
                 startActivity(intent);
             }

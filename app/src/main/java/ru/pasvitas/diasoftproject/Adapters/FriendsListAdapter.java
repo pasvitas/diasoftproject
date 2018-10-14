@@ -12,7 +12,7 @@ import android.widget.TextView;
 import ru.pasvitas.diasoftproject.DB.DBHelper;
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.R;
-import ru.pasvitas.diasoftproject.Data.Storage;
+import ru.pasvitas.diasoftproject.DB.Storage;
 
 public class FriendsListAdapter extends ArrayAdapter<String> {
 
@@ -35,10 +35,12 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.friends_list, null,true);
 
-        TextView txtTitle = rowView.findViewById(R.id.friendname);
+        TextView tvName = rowView.findViewById(R.id.friendname);
+        TextView tvStatus = rowView.findViewById(R.id.friendstatus);
         final ImageView imageView = rowView.findViewById(R.id.picture);
 
-        txtTitle.setText(friends[position].toString());
+        tvName.setText(friends[position].toString());
+        tvStatus.setText(friends[position].getStatus());
 
 
 
@@ -61,7 +63,7 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
     {
         Storage storage = new Storage(dbHelper);
 
-        return storage.GetImage(friend);
+        return storage.getAvatar(friend);
 
 
     }

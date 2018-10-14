@@ -3,6 +3,7 @@ package ru.pasvitas.diasoftproject;
 import android.app.ListActivity;
 import android.os.Handler;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -12,7 +13,7 @@ import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Adapters.FriendsListAdapter;
 import ru.pasvitas.diasoftproject.Utils.VkApi;
 
-public class FriendsActivity extends ListActivity {
+public class FriendsActivity extends AppCompatActivity {
 
     private ArrayAdapter<String> arrayAdapter;
 
