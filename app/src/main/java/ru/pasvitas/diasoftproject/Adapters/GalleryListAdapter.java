@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import ru.pasvitas.diasoftproject.DB.DBHelper;
 import ru.pasvitas.diasoftproject.DB.Storage;
 import ru.pasvitas.diasoftproject.Items.Friend;
@@ -17,13 +20,13 @@ public class GalleryListAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
     private final Integer friendid;
-    private final String[] photoIds;
+    private final ArrayList<Integer> photoIds;
 
     private DBHelper dbHelper;
 
-    public GalleryListAdapter(Activity context, String[] photoIds, Integer friendid, DBHelper storage) {
+    public GalleryListAdapter(Activity context, String[] tmp, ArrayList<Integer> photoIds, Integer friendid, DBHelper storage) {
 
-        super(context, R.layout.gallery_list, photoIds);
+        super(context, R.layout.gallery_list, tmp);
 
         this.photoIds = photoIds;
         this.context=context;
@@ -37,6 +40,8 @@ public class GalleryListAdapter extends ArrayAdapter<String> {
 
         final ImageView image;
 
+        //need rework
+
         View rowView = view;
 
         if (view == null) {
@@ -48,7 +53,7 @@ public class GalleryListAdapter extends ArrayAdapter<String> {
             image = (ImageView) rowView.getTag();
         }
 
-        final Bitmap pic = tryToGetPic(Integer.parseInt(photoIds[position]), friendid);
+        final Bitmap pic = tryToGetPic(photoIds.get(position), friendid);
 
         context.runOnUiThread(new Runnable() {
             @Override

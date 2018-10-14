@@ -30,7 +30,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         final Integer friendid = intent.getIntExtra("friendid", 0);
         final Friend[] galleryfriend = new Friend[1];
-        final ArrayList<String> photoIds = new ArrayList<>();
+        final ArrayList<Integer> photoIds = new ArrayList<>();
         dbHelper = new DBHelper(this);
 
         //Какая-то фигня с потоками
@@ -51,20 +51,18 @@ public class GalleryActivity extends AppCompatActivity {
                 Photo[] photos = VkApi.getPhotos(friendid);
                 for (Photo photo: photos)
                 {
-                    photoIds.add(photo.getId().toString());
+                    photoIds.add(photo.getId());
                 }
             }}).start();
 
 
         Object[] objNames = photoIds.toArray();
 
-        //Second Step: convert Object array to String array
-
         String[] tmp = Arrays.copyOf(objNames, objNames.length, String[].class);
 
         gridView = (GridView) findViewById(R.id.gridView);
         //Integer[] array = photoIds.toArray(new Integer[0]);
-        gridAdapter = new GalleryListAdapter(this, tmp, friendid, dbHelper);
+        gridAdapter = new GalleryListAdapter(this, tmp, photoIds, friendid, dbHelper);
         gridView.setAdapter(gridAdapter);
     }
 }
