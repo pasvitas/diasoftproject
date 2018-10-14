@@ -70,8 +70,8 @@ public class VkApi {
 
     public static Photo[] getPhotos(Integer userId)  {
 
-        final String apiPhotos = "https://api.vk.com/method/photos.getAll?v=5.85&owner_id=%&access_token=%s";
-
+        final String apiPhotos = "https://api.vk.com/method/photos.getAll?v=5.85&owner_id=%s&access_token=%s";
+        //Неверный запрос
 
 
 

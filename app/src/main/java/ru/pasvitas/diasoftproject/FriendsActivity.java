@@ -27,6 +27,8 @@ public class FriendsActivity extends AppCompatActivity {
 
     ListView lv;
 
+    final Context context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,21 +37,9 @@ public class FriendsActivity extends AppCompatActivity {
         dbHelper = new DBHelper(this);
             loadFriendsList();
 
-            final Context context = this;
 
-        lv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                Intent intent = new Intent(context, GalleryActivity.class);
-                intent.putExtra("friendid", position);
-                startActivity(intent);
-                /*Log.d(LOG_TAG, "itemSelect: position = " + position + ", id = "
-                        + id);*/
-            }
 
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+
 
     }
 
@@ -115,9 +105,31 @@ public class FriendsActivity extends AppCompatActivity {
 
         String[] tmp = new String[friends.length];
 
-        FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, friends, dbHelper);
+        final FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, friends, dbHelper);
         lv=findViewById(android.R.id.list);
+
+        /*lv.setOnItemClickListener(.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                /*Log.d(LOG_TAG, "itemSelect: position = " + position + ", id = "
+                        + id);
+            }
+
+        });*/
+
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Intent intent = new Intent(context, GalleryActivity.class);
+                intent.putExtra("friendid", adapter.friends[position].getId());
+                startActivity(intent);
+            }
+        });
 
     }
 }

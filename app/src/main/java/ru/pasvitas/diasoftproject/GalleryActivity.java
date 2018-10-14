@@ -7,6 +7,7 @@ import android.widget.Gallery;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import ru.pasvitas.diasoftproject.Adapters.GalleryListAdapter;
 import ru.pasvitas.diasoftproject.DB.DBHelper;
@@ -27,14 +28,17 @@ public class GalleryActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        final Integer friendid = Integer.parseInt(intent.getStringExtra("friendid"));
+        final Integer friendid = intent.getIntExtra("friendid", 0);
         final Friend[] galleryfriend = new Friend[1];
-        final ArrayList<Integer> photoIds = new ArrayList<>();
+        final ArrayList<String> photoIds = new ArrayList<>();
+        dbHelper = new DBHelper(this);
+
+        //Какая-то фигня с потоками
 
           new Thread(new Runnable(){
             @Override
             public void run() {
-                Friend[] friends = VkApi.getFriends();
+                /*Friend[] friends = VkApi.getFriends();
                 for (Friend friend: friends)
                 {
                     if (friend.getId() == friendid)
@@ -42,19 +46,25 @@ public class GalleryActivity extends AppCompatActivity {
                         galleryfriend[0] = friend;
                         break;
                     }
-                }
+                }*/
 
-                Photo[] photos = VkApi.getPhotos(galleryfriend[0].getId());
+                Photo[] photos = VkApi.getPhotos(friendid);
                 for (Photo photo: photos)
                 {
-                    photoIds.add(photo.getId());
+                    photoIds.add(photo.getId().toString());
                 }
-            }});
+            }}).start();
 
+
+        Object[] objNames = photoIds.toArray();
+
+        //Second Step: convert Object array to String array
+
+        String[] tmp = Arrays.copyOf(objNames, objNames.length, String[].class);
 
         gridView = (GridView) findViewById(R.id.gridView);
         //Integer[] array = photoIds.toArray(new Integer[0]);
-        gridAdapter = new GalleryListAdapter(this, photoIds.toArray(new Integer[0]), galleryfriend[0], dbHelper);
+        gridAdapter = new GalleryListAdapter(this, tmp, friendid, dbHelper);
         gridView.setAdapter(gridAdapter);
     }
 }
