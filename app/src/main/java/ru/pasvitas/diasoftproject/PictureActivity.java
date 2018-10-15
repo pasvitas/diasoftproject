@@ -13,9 +13,6 @@ import ru.pasvitas.diasoftproject.DB.Storage;
 
 public class PictureActivity extends AppCompatActivity {
 
-
-    Storage storage;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +24,7 @@ public class PictureActivity extends AppCompatActivity {
 
         DBHelper dbHelper = new DBHelper(this);
 
-        storage = new Storage(dbHelper);
+        Storage storage = new Storage(dbHelper);
 
         setContentView(R.layout.activity_picture);
         ImageView iv = findViewById(R.id.photoView);
@@ -36,7 +33,6 @@ public class PictureActivity extends AppCompatActivity {
                     "Ошибка! Дождитесь загрузки фото!",
                     Toast.LENGTH_LONG).show();
         else iv.setImageBitmap(bitmap);
-
 
     }
 }

@@ -1,51 +1,38 @@
 package ru.pasvitas.diasoftproject.Items;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
-import android.media.Image;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class Friend {
 
     @Expose
     @SerializedName("id")
-    Integer id;
+    private Integer id;
+
     @Expose
     @SerializedName("first_name")
-    String first_name;
-
-
+    private String first_name;
 
     @Expose
     @SerializedName("last_name")
-    String last_name;
+    private String last_name;
+
     @Expose
     @SerializedName("online")
-    Integer online;
+    private Integer online;
 
     @Expose
     @SerializedName("photo_50")
-    String photo_50;
+    private String photo_50;
 
     @Expose
     @SerializedName("status")
-    String status;
-
+    private String status;
 
     @Override
     public String toString()
     {
-        return new String(first_name + " " + last_name);
+        return first_name + " " + last_name;
     }
 
     public Integer getId() {

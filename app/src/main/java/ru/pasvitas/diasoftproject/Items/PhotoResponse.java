@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName;
 public class PhotoResponse {
     @Expose
     @SerializedName("count")
-    Integer count;
+    private Integer count;
 
     @Expose
     @SerializedName("items")
-    Photo[] photos;
+    private Photo[] photos;
 
     public Integer getCount() {
         return count;

@@ -27,8 +27,10 @@ public class GalleryActivity extends AppCompatActivity {
     private Handler handler;
     private DBHelper dbHelper;
     private Storage storage;
+    
     Context context = this;
     Intent intent;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +44,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         final Integer friendid = intent.getIntExtra("friendid", 0);
 
-        gridView = (GridView) findViewById(R.id.gridView);
-
-
+        gridView = findViewById(R.id.gridView);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -57,9 +57,6 @@ public class GalleryActivity extends AppCompatActivity {
             }
         });
 
-
-        //loadGallery(friendid);
-
     }
 
     @Override
@@ -67,14 +64,12 @@ public class GalleryActivity extends AppCompatActivity {
         super.onStart();
         final Integer friendid = intent.getIntExtra("friendid", 0);
 
-
         loadGallery(friendid);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
     }
 
     void loadGallery(final Integer friendid) {
@@ -89,17 +84,12 @@ public class GalleryActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),
                                     "Ошибка!",
                                     Toast.LENGTH_LONG).show();
-
                         }
                     });
                 } else {
-
-
                     handler.post(new Runnable() {
                         public void run() {
-
                             setGallery(photos, friendid);
-
                         }
                     });
                 }
@@ -107,19 +97,17 @@ public class GalleryActivity extends AppCompatActivity {
         }.start();
     }
 
-
-    void setGallery(Photo[] photos, Integer friendid)
+    void setGallery(Photo[] photos, Integer friendId)
     {
         ArrayList<Photo> listPhotos = new ArrayList<>();
+        
         for (Photo photo: photos)
         {
             listPhotos.add(photo);
         }
-
-        //Integer[] array = photoIds.toArray(new Integer[0]);
-        GalleryListAdapter gridAdapter = new GalleryListAdapter(this, listPhotos, friendid, storage);
+        
+        GalleryListAdapter gridAdapter = new GalleryListAdapter(this, listPhotos, friendId, storage);
         gridView.setAdapter(gridAdapter);
-
 
     }
 }

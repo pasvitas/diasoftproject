@@ -3,6 +3,7 @@ package ru.pasvitas.diasoftproject;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 
 import java.net.URL;
@@ -30,7 +31,7 @@ public class AuthActivity extends AppCompatActivity {
         IFinisherListener finisherListener = new IFinisherListener() {
             @Override
             public void getLink(URL url) {
-                tryAuth(url);
+                tryAuth(url, wvAuth);
             }
         };
 
@@ -38,14 +39,13 @@ public class AuthActivity extends AppCompatActivity {
 
     }
 
-    public void tryAuth(URL url)
+    public void tryAuth(URL url, WebView wvAuth)
     {
-        String host = url.getHost();
-        String path = url.getPath();
         if (url.getHost().equals("oauth.vk.com"))
         {
             if (url.getPath().equals("/blank.html"))
             {
+                wvAuth.setVisibility(View.GONE);
                 String info = url.getRef();
                 VkApi.getInfos(info);
                 Intent intent = new Intent(this, FriendsActivity.class);
@@ -53,5 +53,4 @@ public class AuthActivity extends AppCompatActivity {
             }
         }
     }
-
 }

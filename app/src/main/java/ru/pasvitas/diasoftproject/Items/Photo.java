@@ -7,31 +7,31 @@ public class Photo {
 
     @Expose
     @SerializedName("id")
-    Integer id;
+    private Integer id;
 
     @Expose
     @SerializedName("album_id")
-    Integer album_id;
+    private Integer album_id;
 
     @Expose
     @SerializedName("owner_id")
-    Integer owner_id;
+    private Integer owner_id;
 
     @Expose
     @SerializedName("sizes")
-    PhotoSizes[] photoSizes;
+    private PhotoSizes[] photoSizes;
 
     @Expose
     @SerializedName("text")
-    String text;
+    private String text;
 
     @Expose
     @SerializedName("date")
-    Integer date;
+    private Integer date;
 
     @Expose
     @SerializedName("post_id")
-    Integer real_offset;
+    private Integer real_offset;
 
     public Integer getId() {
         return id;

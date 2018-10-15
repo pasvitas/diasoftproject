@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,15 +18,9 @@ import ru.pasvitas.diasoftproject.Utils.VkApi;
 
 public class FriendsActivity extends AppCompatActivity {
 
-    private ArrayAdapter<String> arrayAdapter;
-
-
     Handler handler;
-
     DBHelper dbHelper;
-
     Storage storage;
-
     ListView lv;
 
     final Context context = this;
@@ -40,12 +33,7 @@ public class FriendsActivity extends AppCompatActivity {
         dbHelper = new DBHelper(this);
         storage = new Storage(dbHelper);
 
-            loadFriendsList();
-
-
-
-
-
+        loadFriendsList();
     }
 
     @Override
@@ -71,7 +59,6 @@ public class FriendsActivity extends AppCompatActivity {
                     });
                 } else {
 
-
                     handler.post(new Runnable() {
                         public void run() {
 
@@ -80,54 +67,16 @@ public class FriendsActivity extends AppCompatActivity {
                         }
                     });
                 }
-
-
-
-/*                if (json == null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Ошибка!",
-                                    Toast.LENGTH_LONG).show();
-
-                        }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        public void run() {
-
-                            applyFrindsList(json);
-
-                        }
-                    });
-                }*/
-
             }
         }.start();
     }
 
     private void applyFrindsList(Friend[] friends) {
 
-
-
-
-        //Collections.sort(arrayList);
-
         String[] tmp = new String[friends.length];
 
         final FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, friends, storage);
         lv=findViewById(android.R.id.list);
-
-        /*lv.setOnItemClickListener(.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                /*Log.d(LOG_TAG, "itemSelect: position = " + position + ", id = "
-                        + id);
-            }
-
-        });*/
 
         lv.setAdapter(adapter);
 

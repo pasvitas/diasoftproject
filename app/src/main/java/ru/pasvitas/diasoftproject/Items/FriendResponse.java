@@ -8,10 +8,11 @@ import java.util.ArrayList;
 public class FriendResponse {
     @Expose
     @SerializedName("count")
-    public Integer count;
+    private Integer count;
+
     @Expose
     @SerializedName("items")
-    public Friend[] friends;
+    private Friend[] friends;
 
     public Integer getCount() {
         return count;

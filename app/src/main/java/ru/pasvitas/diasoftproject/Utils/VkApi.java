@@ -16,64 +16,52 @@ import java.net.URL;
 
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Items.Photo;
-import ru.pasvitas.diasoftproject.Items.Response;
+import ru.pasvitas.diasoftproject.Items.ResponseFriend;
 import ru.pasvitas.diasoftproject.Items.ResponsePhoto;
 
 public class VkApi {
 
     public static String token;
-    private static Integer expires;
-    private static Integer userId;
 
     public static Friend[] getFriends()  {
 
         final String apiFriends = "https://api.vk.com/method/friends.get?v=5.85&order=name&fields=photo_50,status&access_token=%s";
 
+        URL url;
+        try {
+             url = new URL(String.format(apiFriends, token));
 
+             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+             StringBuilder json = new StringBuilder(1024);
 
-                URL url;
-                try {
-                    url = new URL(String.format(apiFriends, token));
+             BufferedReader reader = new BufferedReader(
+                     new InputStreamReader(connection.getInputStream()));
 
-                    HttpURLConnection connection =
-                            (HttpURLConnection) url.openConnection();
+             String tmp;
+             while ((tmp = reader.readLine()) != null)
+                    json.append(tmp).append("\n");
+             reader.close();
 
-                    StringBuilder json = new StringBuilder(1024);
+              GsonBuilder builder = new GsonBuilder();
+              Gson gson = builder.create();
+              ResponseFriend responseFriend = gson.fromJson(json.toString(), ResponseFriend.class);
 
-                    BufferedReader reader = new BufferedReader(
-                            new InputStreamReader(connection.getInputStream()));
+              return responseFriend.friendResponse.getFriends();
 
-
-                    String tmp;
-                    while ((tmp = reader.readLine()) != null)
-                        json.append(tmp).append("\n");
-                    reader.close();
-
-                    GsonBuilder builder = new GsonBuilder();
-                    Gson gson = builder.create();
-                    Response response = gson.fromJson(json.toString(), Response.class);
-
-
-                    return response.friendResponse.getFriends();
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                    return null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 
     }
 
     public static Photo[] getPhotos(Integer userId)  {
 
         final String apiPhotos = "https://api.vk.com/method/photos.getAll?v=5.85&count=100&owner_id=%s&access_token=%s";
-        //Неверный запрос
-
-
 
         URL url;
         try {
@@ -87,7 +75,6 @@ public class VkApi {
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()));
 
-
             String tmp;
             while ((tmp = reader.readLine()) != null)
                 json.append(tmp).append("\n");
@@ -96,7 +83,6 @@ public class VkApi {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
             ResponsePhoto response = gson.fromJson(json.toString(), ResponsePhoto.class);
-
 
             return response.photoResponse.getPhotos();
 
@@ -113,23 +99,19 @@ public class VkApi {
     public static Bitmap DownloadPhoto(final String stringUrl)
     {
         final Bitmap[] myBitmap = {null};
-        /*new Thread(new Runnable(){
-            @Override
-            public void run() {*/
-                try {
 
-                    java.net.URL url = new java.net.URL(stringUrl);
-                    HttpURLConnection connection = (HttpURLConnection) url
-                            .openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    InputStream input = connection.getInputStream();
-                    myBitmap[0] = BitmapFactory.decodeStream(input);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        try {
 
-                }
-            //}}).start();
+              java.net.URL url = new java.net.URL(stringUrl);
+              HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+              connection.setDoInput(true);
+              connection.connect();
+              InputStream input = connection.getInputStream();
+              myBitmap[0] = BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return myBitmap[0];
     }
 
@@ -137,7 +119,5 @@ public class VkApi {
     {
         String[] props = response.split("&");
         token = props[0].split("=")[1];
-        expires = Integer.parseInt(props[1].split("=")[1]);
-        userId = Integer.parseInt(props[2].split("=")[1]);
     }
 }

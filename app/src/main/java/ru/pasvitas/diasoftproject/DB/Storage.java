@@ -5,11 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.widget.Toast;
-
 import java.io.ByteArrayOutputStream;
-
-import ru.pasvitas.diasoftproject.DB.DBHelper;
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Items.Photo;
 import ru.pasvitas.diasoftproject.Utils.VkApi;
@@ -28,27 +24,51 @@ public class Storage {
         Cursor cursor = database.query(DBHelper.TABLE, null, DBHelper.KEY_VKID + " = " + friend.getId(), null, null, null, null);
         if (cursor.moveToFirst()) {
 
-            byte[] photo  = cursor.getBlob(cursor.getColumnIndex(DBHelper.KEY_AVATAR));
-            cursor.close();
-            return BitmapFactory.decodeByteArray(photo, 0, photo.length);
+            String photoUrl = cursor.getString(cursor.getColumnIndex(DBHelper.KEY_AVAURL));
 
+            if (photoUrl.equals(friend.getPhoto_50())) {
+
+                byte[] photo = cursor.getBlob(cursor.getColumnIndex(DBHelper.KEY_AVATAR));
+                cursor.close();
+                return BitmapFactory.decodeByteArray(photo, 0, photo.length);
+            }
+            else
+            {
+                final ContentValues cv = new ContentValues();
+                final Bitmap[] photo = new Bitmap[1];
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        photo[0] = VkApi.DownloadPhoto(friend.getPhoto_50());
+                        photo[0].compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        cv.put(DBHelper.KEY_AVATAR,  stream.toByteArray());
+                        cv.put(DBHelper.KEY_AVAURL,  friend.getPhoto_50());
+
+                        database.update(DBHelper.TABLE, cv, "vkid = ?",
+                                new String[] { friend.getId().toString() });
+
+                    }}).start();
+                return photo[0];
+            }
 
         } else
         {
+            cursor.close();
             final ContentValues cv = new  ContentValues();
             cv.put(DBHelper.KEY_VKID,    friend.getId());
             cv.put(DBHelper.KEY_STATUS,    friend.getStatus());
             cv.put(DBHelper.KEY_FNAME,    friend.getFirst_name());
             cv.put(DBHelper.KEY_LNAME,    friend.getLast_name());
+            cv.put(DBHelper.KEY_AVAURL,    friend.getPhoto_50());
 
-             //final
             final Bitmap[] photo = new Bitmap[1];
             new Thread(new Runnable(){
                 @Override
                 public void run() {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     photo[0] = VkApi.DownloadPhoto(friend.getPhoto_50());
-                    photo[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    photo[0].compress(Bitmap.CompressFormat.JPEG, 100, stream);
                     cv.put(DBHelper.KEY_AVATAR,  stream.toByteArray());
 
                     database.insert(DBHelper.TABLE, null, cv);
@@ -56,8 +76,6 @@ public class Storage {
                 }}).start();
 
             return photo[0];
-
-
 
         }
 
@@ -73,9 +91,7 @@ public class Storage {
             cursor.close();
             return BitmapFactory.decodeByteArray(photoBitmap, 0, photoBitmap.length);
 
-
         } else return null;
-
 
     }
 
@@ -89,36 +105,33 @@ public class Storage {
             cursor.close();
             return BitmapFactory.decodeByteArray(photoBitmap, 0, photoBitmap.length);
 
-
         } else
         {
+            cursor.close();
             final ContentValues cv = new  ContentValues();
             cv.put(DBHelper.KEY_PHOTOID,    friendid + "_" + photo.getId());
 
-
             final String url = photo.getPhotoURL();
-
-            //Попробовать сделать лист из битмапа. Или закинуть загрузку в фото.
-
             final Bitmap[] newPhoto = new Bitmap[1];
-
 
             new Thread(new Runnable(){
                 @Override
                 public void run() {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     newPhoto[0] = VkApi.DownloadPhoto(url);
-                    newPhoto[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    newPhoto[0].compress(Bitmap.CompressFormat.JPEG, 100, stream);
                     cv.put(DBHelper.KEY_PHOTO,  stream.toByteArray());
 
                     database.insert(DBHelper.TABLE_PHOTO, null, cv);
                 }}).start();
 
-            Bitmap returnphoto = newPhoto[0];
+            //Bitmap returnphoto = newPhoto[0];
 
-            return returnphoto;
+            return newPhoto[0];
 
         }
+
+
 
     }
 }

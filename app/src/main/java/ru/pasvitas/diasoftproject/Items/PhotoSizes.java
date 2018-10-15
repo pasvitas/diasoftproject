@@ -6,19 +6,19 @@ import com.google.gson.annotations.SerializedName;
 public class PhotoSizes {
     @Expose
     @SerializedName("type")
-    String type;
+    private String type;
 
     @Expose
     @SerializedName("url")
-    String url;
+    private String url;
 
     @Expose
     @SerializedName("width")
-    Integer width;
+    private Integer width;
 
     @Expose
     @SerializedName("height")
-    Integer height;
+    private Integer height;
 
     public String getType() {
         return type;
