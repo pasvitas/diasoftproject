@@ -61,7 +61,7 @@ public class VkApi {
 
     public static Photo[] getPhotos(Integer userId)  {
 
-        final String apiPhotos = "https://api.vk.com/method/photos.getAll?v=5.85&count=100&owner_id=%s&access_token=%s";
+        final String apiPhotos = "https://api.vk.com/method/photos.getAll?v=5.85&count=30&owner_id=%s&access_token=%s";
 
         URL url;
         try {
