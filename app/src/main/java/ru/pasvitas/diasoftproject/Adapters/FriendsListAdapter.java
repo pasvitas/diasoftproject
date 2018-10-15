@@ -19,15 +19,15 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
     private final Activity context;
     public final Friend[] friends;
 
-    private DBHelper dbHelper;
+    public Storage storage;
 
-    public FriendsListAdapter(Activity context, String[] friendnames, Friend[] friends, DBHelper storage) {
+    public FriendsListAdapter(Activity context, String[] friendnames, Friend[] friends, Storage storage) {
 
         super(context, R.layout.friends_list, friendnames);
 
         this.context=context;
         this.friends=friends;
-        this.dbHelper = storage;
+        this.storage = storage;
     }
 
 
@@ -61,7 +61,6 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
 
     private Bitmap tryToGetPic(Friend friend)
     {
-        Storage storage = new Storage(dbHelper);
 
         return storage.getAvatar(friend);
 

@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import ru.pasvitas.diasoftproject.DB.DBHelper;
+import ru.pasvitas.diasoftproject.DB.Storage;
 import ru.pasvitas.diasoftproject.Items.Friend;
 import ru.pasvitas.diasoftproject.Adapters.FriendsListAdapter;
 import ru.pasvitas.diasoftproject.Utils.VkApi;
@@ -25,6 +26,8 @@ public class FriendsActivity extends AppCompatActivity {
 
     DBHelper dbHelper;
 
+    Storage storage;
+
     ListView lv;
 
     final Context context = this;
@@ -35,11 +38,18 @@ public class FriendsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friends);
         handler = new Handler();
         dbHelper = new DBHelper(this);
+        storage = new Storage(dbHelper);
+
             loadFriendsList();
 
 
 
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
 
     }
 
@@ -105,7 +115,7 @@ public class FriendsActivity extends AppCompatActivity {
 
         String[] tmp = new String[friends.length];
 
-        final FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, friends, dbHelper);
+        final FriendsListAdapter adapter=new FriendsListAdapter(this, tmp, friends, storage);
         lv=findViewById(android.R.id.list);
 
         /*lv.setOnItemClickListener(.OnItemClickListener() {

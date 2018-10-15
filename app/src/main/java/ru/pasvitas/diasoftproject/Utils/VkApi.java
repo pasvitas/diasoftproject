@@ -70,7 +70,7 @@ public class VkApi {
 
     public static Photo[] getPhotos(Integer userId)  {
 
-        final String apiPhotos = "https://api.vk.com/method/photos.getAll?v=5.85&owner_id=%s&access_token=%s";
+        final String apiPhotos = "https://api.vk.com/method/photos.getAll?v=5.85&count=100&owner_id=%s&access_token=%s";
         //Неверный запрос
 
 
@@ -110,21 +110,27 @@ public class VkApi {
 
     }
 
-    public static Bitmap DownloadPhoto(String stringUrl)
+    public static Bitmap DownloadPhoto(final String stringUrl)
     {
-        try {
-            java.net.URL url = new java.net.URL(stringUrl);
-            HttpURLConnection connection = (HttpURLConnection) url
-                    .openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        final Bitmap[] myBitmap = {null};
+        /*new Thread(new Runnable(){
+            @Override
+            public void run() {*/
+                try {
+
+                    java.net.URL url = new java.net.URL(stringUrl);
+                    HttpURLConnection connection = (HttpURLConnection) url
+                            .openConnection();
+                    connection.setDoInput(true);
+                    connection.connect();
+                    InputStream input = connection.getInputStream();
+                    myBitmap[0] = BitmapFactory.decodeStream(input);
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                }
+            //}}).start();
+        return myBitmap[0];
     }
 
     public static void getInfos(String response)

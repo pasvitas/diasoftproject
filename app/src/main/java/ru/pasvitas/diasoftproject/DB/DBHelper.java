@@ -16,12 +16,12 @@ import ru.pasvitas.diasoftproject.Utils.VkApi;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 11;
+    public static final int DATABASE_VERSION = 15;
     public static final String DATABASE_NAME = "friendsDB";
     public static final String TABLE = "friends";
     public static final String TABLE_PHOTO = "photos";
 
-    public static final String KEY_ID = "_id";
+    public static final String KEY_ID = "id";
     public static final String KEY_VKID = "vkid";
     public static final String KEY_FNAME = "fname";
     public static final String KEY_LNAME = "lname";
@@ -37,13 +37,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_PHOTO + "(" +  KEY_PHOTOID + " integer primary key, " +  KEY_PHOTO + " blob " + ")");
+        db.execSQL("create table " + TABLE_PHOTO + "(" +  KEY_ID + " integer primary key AUTOINCREMENT, " + KEY_PHOTOID + " string, " +  KEY_PHOTO + " blob " + ")");
 
         db.execSQL("create table " + TABLE + "(" + KEY_VKID
                 + " integer primary key," + KEY_FNAME + " text," + KEY_LNAME + " text," + KEY_AVATAR + " blob, "+ KEY_STATUS + " text " + ")");
 
 
-        new Thread(new Runnable(){
+        /*new Thread(new Runnable(){
             @Override
             public void run() {
                  ArrayList<Friend> friends = new ArrayList<>(Arrays.asList(VkApi.getFriends()));
@@ -76,11 +76,11 @@ public class DBHelper extends SQLiteOpenHelper {
                         VkApi.DownloadPhoto(photo.getPhotoURL()).compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
                         cv.put(KEY_PHOTO, stream.toByteArray());
-                    }*/
+                    }
 
 
                 }
-            }}).start();
+            }}).start();*/
 
 
     }

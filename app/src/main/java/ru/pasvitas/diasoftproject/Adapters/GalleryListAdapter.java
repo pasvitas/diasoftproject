@@ -21,18 +21,18 @@ public class GalleryListAdapter extends ArrayAdapter {
 
     private final Activity context;
     private final Integer friendid;
-    private final ArrayList<Photo> photos;
+    public final ArrayList<Photo> photos;
 
-    private DBHelper dbHelper;
+    public Storage storage;
 
-    public GalleryListAdapter(Activity context, ArrayList<Photo> photos, Integer friendid, DBHelper storage) {
+    public GalleryListAdapter(Activity context, ArrayList<Photo> photos, Integer friendid, Storage storage) {
 
         super(context, R.layout.gallery_list, photos);
 
         this.photos = photos;
         this.context=context;
         this.friendid=friendid;
-        this.dbHelper = storage;
+        this.storage = storage;
     }
 
 
@@ -51,8 +51,10 @@ public class GalleryListAdapter extends ArrayAdapter {
             imageView = (ImageView) row.getTag();
         }
 
-        final Bitmap pic = tryToGetPic(photos.get(position), friendid);
         final ImageView tmpImageView = imageView;
+
+        final Bitmap pic = tryToGetPic(photos.get(position), friendid);
+
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -90,10 +92,7 @@ public class GalleryListAdapter extends ArrayAdapter {
 
     private Bitmap tryToGetPic(Photo photo, Integer friendid)
     {
-        Storage storage = new Storage(dbHelper);
-
         return storage.getPhoto(photo, friendid);
-
 
     }
 }
